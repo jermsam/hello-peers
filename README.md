@@ -4,8 +4,8 @@ LocalFirst P2P with Holepunch's eco-system served over websockets
 
 1. Hyperswarm (a [Kademlia DHT](https://www.youtube.com/watch?v=1QdKhNpsj8M) with [hole-punching](https://www.geeksforgeeks.org/nat-hole-punching-in-computer-network/) builtin)
 
-When you create a p2p connection (like with WebRTC) you typically need a "signaling server" to arrange the connection.
-Hyperswarm replaces that server with a distributed signaling system.
+⋅⋅⋅When you create a p2p connection (like with WebRTC) you typically need a "signaling server" to arrange the connection.
+⋅⋅⋅Hyperswarm replaces that server with a distributed signaling system.
 
 2. HyperDHT ( the Distributed Hash Table powering Hyperswarm built on top of [dht-rpc](https://github.com/mafintosh/dht-rpc))
 
