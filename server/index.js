@@ -12,7 +12,7 @@ const hyperdht_1 = __importDefault(require("hyperdht"));
 const dht_relay_1 = require("@hyperswarm/dht-relay");
 // @ts-ignore
 const ws_2 = __importDefault(require("@hyperswarm/dht-relay/ws"));
-const port = process.env.PORT || 3400;
+const port = process.env.PORT || 3000;
 const server = http_1.default.createServer(express_1.default);
 const dht = new hyperdht_1.default();
 const wss = new ws_1.WebSocketServer({ server });

@@ -9,7 +9,7 @@ import { relay } from '@hyperswarm/dht-relay'
 // @ts-ignore
 import Stream from '@hyperswarm/dht-relay/ws'
 
-const port = process.env.PORT || 3400;
+const port = process.env.PORT || 3000;
 
 const server = http.createServer(express)
 

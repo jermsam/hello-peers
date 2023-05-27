@@ -19,7 +19,7 @@ import * as BufferSource from 'buffer/'
 //   // return crypto.randomBytes(32)
 // }
 
-export function createSwarm (topic: string, port = 3400) {
+export function createSwarm (topic: string, port = 3000) {
   const socket = new WebSocket(`ws://localhost:${port}`);
 
   const dht = new DHT(new Stream(true, socket))
@@ -30,9 +30,9 @@ export function createSwarm (topic: string, port = 3400) {
 
   swarm.join(topicBuffer)
   
-  return { swarm, deinit: async () => {
-    await swarm.leave(topicBuffer)
-    await swarm.connections.forEach((conn: Stream) => conn.close())
-    await swarm.destroy()
-  }} 
+  return { swarm, deinit:  goodbye(async () => {
+      await swarm.leave(topicBuffer)
+      await swarm.connections.forEach((conn: Stream) => conn.close())
+      await swarm.destroy()
+    })}
 }

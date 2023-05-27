@@ -1,4 +1,4 @@
-import {useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {XCircleIcon} from '@heroicons/react/20/solid';
 
 // type TodoForm = {
@@ -8,15 +8,16 @@ import {XCircleIcon} from '@heroicons/react/20/solid';
 
 import {z} from 'zod';
 import { reset, SubmitHandler, useForm, zodForm} from '@modular-forms/react';
-import { createSwarm } from './api/client.ts';
-import { useEffect, useState } from 'react';
+import {createSwarm} from './api/client.ts';
+
 
 function useSwarm (topic: string) {
   const [swarm, setSwarm] = useState(null)
+  
   useEffect(() => {
-    const { swarm, deinit } = createSwarm(topic)
-    setSwarm(swarm)
-    return deinit
+   const result = createSwarm(topic)
+    setSwarm(result.swarm)
+    return result.deinit()
   }, [])
   return swarm
 }
@@ -37,7 +38,7 @@ function App() {
   const [todoForm, {Form, Field/*, FieldArray*/}] = useForm<TodoForm>({
     validate: zodForm(specialSchema),
   });
-  const swarm = useSwarm('vue-rocks-todo') as any
+  const swarm = useSwarm('vu-rocks-todo') as any
   
   useEffect(() => {
     swarm.on('connection', (conn: any, peerInfo: any) => {

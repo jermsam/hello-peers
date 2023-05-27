@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run tsc && ts-node index.ts",
+    "server": "npm run tsc && ts-node index.ts",
     "tsc": "tsc"
   },
   "keywords": [],
