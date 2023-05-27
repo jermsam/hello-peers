@@ -8,16 +8,13 @@
   }
   const itemDialog = ref<HTMLDialogElement>();
   const connections = ref(new Map());
-  const todoForm = ref({
+  const todoForm = ref<TodoForm>({
     text:'',
     done: false
   });
-  const todos = ref([])
+  const todos = ref<TodoForm[]>()
 
   onMounted(async () => {
-    await swarm.flush() // Waits for the swarm to connect to pending peers.
-
-
     swarm.on('connection', (conn: any, peerInfo: any) => {
       conn.write('this is a server connection')
       const key = peerInfo.publicKey
