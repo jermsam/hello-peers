@@ -8,8 +8,18 @@ import {XCircleIcon} from '@heroicons/react/20/solid';
 
 import {z} from 'zod';
 import { reset, SubmitHandler, useForm, zodForm} from '@modular-forms/react';
-import { signal, effect } from "@preact/signals-react";
-import {swarm} from './api/client.ts';
+import { createSwarm } from './api/client.ts';
+import { useEffect, useState } from 'react';
+
+function useSwarm (topic: string) {
+  const [swarm, setSwarm] = useState(null)
+  useEffect(() => {
+    const { swarm, deinit } = createSwarm(topic)
+    setSwarm(swarm)
+    return deinit
+  }, [])
+  return swarm
+}
 
 const specialSchema = z.object({
   text: z
@@ -20,41 +30,30 @@ const specialSchema = z.object({
 
 type TodoForm = z.infer<typeof specialSchema>;
 
-const connections = signal(new Map());
-const todos = signal<TodoForm[]>([]);
+const [todos, setTodo] = useState<TodoForm[]>([]);
 
 function App() {
   const itemDialog = useRef<HTMLDialogElement>(null);
   const [todoForm, {Form, Field/*, FieldArray*/}] = useForm<TodoForm>({
     validate: zodForm(specialSchema),
   });
+  const swarm = useSwarm('vue-rocks-todo') as any
   
-  effect(() => {
+  useEffect(() => {
     swarm.on('connection', (conn: any, peerInfo: any) => {
-      conn.write('this is a server connection')
-      const key = peerInfo.publicKey
-      console.log('peers connected', peerInfo)
-      connections.value.set(key, conn)
-      conn.on('data', (dataUpdate: TodoForm[]) => {
+      console.log('new peer connected', peerInfo)
+      conn.on('data', (dataUpdate: string) => {
         console.log('updated data: ', dataUpdate);
-        todos.value = dataUpdate
+        setTodo(JSON.parse(dataUpdate))
       })
-      conn.on('close', () => connections.value.delete(key))
-      conn.on('error', () => connections.value.delete(key))
     });
     
     swarm.on('update', () => {
-      // store.connections?.forEach(conn => {
-      //   conn.on('data', (dataUpdate: TodoForm[]) => {
-      //     console.log('updated data: ', dataUpdate);
-      //     todos.value = dataUpdate
-      //   })
-      // })
       console.log('peer updated...')
     })
-  });
+  }, []);
   const handleSubmit: SubmitHandler<TodoForm> = (values: TodoForm /*event*/) => {
-    connections.value.forEach(conn => conn.send(JSON.stringify(values)))
+    swarm.connections.forEach((conn: any) => conn.send(JSON.stringify(values)))
     reset(todoForm);
     itemDialog.current?.close();
   };
@@ -105,7 +104,7 @@ function App() {
       </dialog>
       <div>
         {
-          todos.value.map((item, index) => (
+          todos.map((item, index) => (
             <div key={index} className="w-96 bg-white shadow rounded">
               {item.text}
             </div>
