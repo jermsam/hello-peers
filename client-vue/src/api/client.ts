@@ -32,7 +32,7 @@ export const swarm = new Hyperswarm({dht});
 
 
 
-const topicBuffer = BufferSource.Buffer.from('we-rock-todo', 'hex')
+const topicBuffer = BufferSource.Buffer.from('vue-rocks-todo', 'hex')
 
 swarm.join(topicBuffer)
 

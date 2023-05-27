@@ -14,7 +14,7 @@
   });
   const todos = ref<TodoForm[]>()
 
-  onMounted(async () => {
+  onMounted(() => {
     swarm.on('connection', (conn: any, peerInfo: any) => {
       conn.write('this is a server connection')
       const key = peerInfo.publicKey
