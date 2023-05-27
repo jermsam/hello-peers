@@ -19,7 +19,7 @@ import * as BufferSource from 'buffer/'
 //   // return crypto.randomBytes(32)
 // }
 
-export function createSwarm (topic: string, port = 3000) {
+export function createSwarm (topic: string, port = 3400) {
   const socket = new WebSocket(`ws://localhost:${port}`);
 
   const dht = new DHT(new Stream(true, socket))
