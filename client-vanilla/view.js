@@ -17,12 +17,12 @@ export function setTodo (todo) {
 <div class="flex items-center justify-between max-w-2xl px-8 py-4 mx-auto border cursor-pointer rounded-xl dark:border-gray-700 m-10">
   li.key = todo._id
                         <div class="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-400 sm:h-9 sm:w-9" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                            </svg>
+                            <div id="checkbox-${todo._id}">
+                           
+                            </div>
 
                             <div class="flex flex-col items-center mx-5 space-y-1">
-                                <h2 class="text-lg font-medium text-gray-700 sm:text-2xl dark:text-gray-950"> ${todo.text}</h2>
+                                <h2 id="text-${todo._id}" class="text-lg font-medium text-gray-700 sm:text-2xl dark:text-gray-950"> ${todo.text}</h2>
                             </div>
                         </div>
                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 cursor-pointer">
@@ -31,6 +31,16 @@ export function setTodo (todo) {
                     </div>
 `
   todoList.appendChild(section)
+  
+  document.getElementById(`checkbox-${todo._id}`).innerHTML = todo.done ?
+    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">\n' +
+    '  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />\n' +
+    '</svg>':
+    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">\n' +
+    '  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />\n' +
+    '</svg>'
+  const textLine = document.getElementById(`text-${todo._id}`);
+  todo.done ? textLine.classList.add('line-through') : textLine.classList.remove('line-through')
 }
 
 todoForm.addEventListener('submit', (e) => {
