@@ -15,6 +15,7 @@
     "@hyperswarm/dht-relay": "^0.4.1",
     "b4a": "^1.6.4",
     "buffer": "^6.0.3",
+    "graceful-goodbye": "^1.2.1",
     "hyperswarm": "^4.4.1"
   }
 }
