@@ -4,7 +4,8 @@ import Stream from '@hyperswarm/dht-relay/ws';
 import Hyperswarm from 'hyperswarm';
 // @ts-ignore
 import goodbye from 'graceful-goodbye';
-import * as BufferSource from 'buffer/'
+// import * as BufferSource from 'buffer/'
+import b4a from 'b4a'
 
 const socket = new WebSocket('ws://localhost:3400')
 const dht = new DHT(new Stream(true, socket))
@@ -13,7 +14,7 @@ console.log(dht);
 
 const swarm = new Hyperswarm({dht});
 
-const topicBuffer = BufferSource.Buffer.from('say a good hello', 'hex')
+const topicBuffer = b4a.from('say a good hello', 'hex')
 
 swarm.join(topicBuffer)
 
@@ -27,8 +28,9 @@ goodbye(async () => {
 swarm.on('connection', (conn, peerInfo) => {
   console.log('new peer connected', peerInfo)
   conn.on('data', (dataUpdate) => {
-    console.log('updated data: ', dataUpdate);
-    setTodo(JSON.parse(dataUpdate))
+    console.log('updated data: ', b4a.toString(dataUpdate));
+    const jsonData = b4a.toString(dataUpdate);
+    setTodo(JSON.parse(jsonData))
   })
 });
 
@@ -62,7 +64,7 @@ todoForm.addEventListener("submit", (e) => {
     swarm.connections.forEach((conn) => {
       console.log(conn);
       // conn.send(JSON.stringify(todo));
-      conn.write(BufferSource.Buffer.from(JSON.stringify(todo)))
+      conn.write(JSON.stringify(todo))
     })
     
     todoDialog.close()
