@@ -8,18 +8,11 @@ import {XCircleIcon} from '@heroicons/react/20/solid';
 
 import {z} from 'zod';
 import { reset, SubmitHandler, useForm, zodForm} from '@modular-forms/react';
-import { createSwarm } from './api/client.ts';
+import swarm from './api/client.ts';
+import b4a from 'b4a';
 
 
-function useSwarm (topic: string) {
-  const [swarm, setSwarm] = useState(null)
-  useEffect(() => {
-    const { swarm, deinit } = createSwarm(topic)
-    setSwarm(swarm)
-    return deinit
-  }, [])
-  return swarm
-}
+
 
 const specialSchema = z.object({
   text: z
@@ -30,30 +23,32 @@ const specialSchema = z.object({
 
 type TodoForm = z.infer<typeof specialSchema>;
 
-const [todos, setTodo] = useState<TodoForm[]>([]);
+const [todos, setTodos] = useState<TodoForm[]>([]);
 
 function App() {
   const itemDialog = useRef<HTMLDialogElement>(null);
   const [todoForm, {Form, Field/*, FieldArray*/}] = useForm<TodoForm>({
     validate: zodForm(specialSchema),
   });
-  const swarm = useSwarm('vue-rocks-todo') as any
+
   
   useEffect(() => {
     swarm.on('connection', (conn: any, peerInfo: any) => {
       console.log('new peer connected', peerInfo)
-      conn.on('data', (dataUpdate: string) => {
-        console.log('updated data: ', dataUpdate);
-        setTodo(JSON.parse(dataUpdate))
+      conn.on('data', (dataUpdate: any) => {
+        console.log('updated data: ', b4a.toString(dataUpdate));
+        const jsonData = b4a.toString(dataUpdate);
+        setTodos([...todos, JSON.parse(jsonData)])
       })
     });
-    
-    swarm.on('update', () => {
-      console.log('peer updated...')
-    })
-  }, [swarm]);
+  }, []);
+  
   const handleSubmit: SubmitHandler<TodoForm> = (values: TodoForm /*event*/) => {
-    swarm.connections.forEach((conn: any) => conn.send(JSON.stringify(values)))
+    const todo = {
+      ...values,
+      done: false
+    }
+    swarm.connections.forEach((conn: any) =>  conn.write(JSON.stringify(todo)))
     reset(todoForm);
     itemDialog.current?.close();
   };
