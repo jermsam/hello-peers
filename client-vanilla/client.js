@@ -54,7 +54,7 @@ todoForm.addEventListener("submit", (e) => {
     // throw error
     const err = 'please enter a todo text';
     console.error(err);
-    document.getElementById("error").innerHTML = err;
+    document.getElementById("todo-error").innerHTML = err;
   } else {
     // perform operation with form input
     const todo = {

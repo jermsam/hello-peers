@@ -34,14 +34,14 @@
         <form id="todo-form">
           <div>
             <label>
-<textarea
-    id="todo-text"
-    class="focus:ring-2 focus:ring-gray-950 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm"
->
+            <textarea
+                id="todo-text"
+                class="focus:ring-2 focus:ring-gray-950 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm"
+            >
 
-</textarea>
+            </textarea>
             </label>
-            <!--    {field.error && <div class={'text-red-800'}>{field.error}</div>}-->
+              <div class='text-red-800' id="todo-error"></div>
           </div>
           <div class="flex justify-end mt-5">
             <button type="submit"
