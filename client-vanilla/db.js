@@ -21,20 +21,23 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
   const db = createDB(localBee)
 
   const DBCores = new Set()
-  DBCores.add(localInput.key.toString())
-  console.log(localInput.key.toString())
+  DBCores.add(localInput.id)
+  console.log(localInput.id)
   const newDBExt = discoveryCore.registerExtension(extPrefix + '-db-sync', {
     encoding: 'json',
     onmessage: async dbs => {
       let sawNew = false
       for (const db of dbs) {
-        if (typeof db === 'string') console.log(db)
         if (typeof db !== 'string' || DBCores.has(db)) continue
+        console.log('new db:', db)
         await handleNewDBURL(db)
         sawNew = true
       }
-      if (sawNew) newDBExt.broadcast(Array.from(DBCores))
-      console.log('got new dbs message, current inputs count:', DBCores.size)
+      if (sawNew) {
+        newDBExt.broadcast(Array.from(DBCores))
+        console.log('got new dbs message, current inputs count:', DBCores.size)
+        console.log(Array.from(DBCores).join('\n\n'))
+      }
     }
   })
   discoveryCore.on('peer-add', () => {
@@ -47,7 +50,12 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
 
   async function handleNewDBURL (dbUrl) {
     DBCores.add(dbUrl)
-    autobase.addInput(await sdk.get(b4a.from(dbUrl.split(',').map(Number))))
+    console.log('db key:', dbUrl)
+    try {
+      await autobase.addInput(await sdk.get(dbUrl))
+    } catch (e) {
+      console.error('error adding db:', e)
+    }
   }
 }
 
