@@ -27,7 +27,7 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
     onmessage: async dbs => {
       let sawNew = false
       for (const db of dbs) {
-        if (DBCores.has(db)) continue
+        if (db && DBCores.has(db)) continue
         await handleNewDBURL(db)
         sawNew = true
       }
@@ -44,7 +44,6 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
   return db
 
   async function handleNewDBURL (dbUrl) {
-    if (!dbUrl) return
     DBCores.add(dbUrl)
     autobase.addInput(await sdk.get(dbUrl))
   }
