@@ -4,12 +4,12 @@ const todoDialogOpenButton = document.getElementById('todo-dialog-open-button')
 const todoDialogCloseButton = document.getElementById('todo-dialog-close-button')
 const todoDialog = document.getElementById('todo-dialog')
 const todoForm = document.getElementById('todo-form')
-const todoList = document.getElementById('todo-list')
+export const todoList = document.getElementById('todo-list')
 const todoText = document.getElementById('todo-text')
 
 export function setTodo (todo) {
   const section = document.createElement('section')
-  section.key = todo._id
+  section.id = todo._id.toString()
   section.innerHTML = `
 <div class="flex items-center justify-between max-w-2xl px-8 py-4 mx-auto border cursor-pointer rounded-xl dark:border-gray-700 m-10">
                         <div class="flex items-center">

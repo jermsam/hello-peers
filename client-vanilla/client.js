@@ -7,7 +7,7 @@ import b4a from 'b4a'
 
 import * as SDK from 'hyper-sdk'
 import { createMultiWriterDB } from './db'
-import { setTodo } from './view'
+import { setTodo, todoList } from './view'
 const { crypto, WebSocket } = window
 
 let resolveReady
@@ -29,8 +29,8 @@ const topicBuffer = await crypto.subtle.digest('SHA-256', b4a.from('say a good h
 
 const discovery = await sdk.get(topicBuffer)
 
-discovery.on('new-peer', peerInfo => {
-  console.log('new peer:', peerInfo.publicKey.toString('hex'))
+discovery.on('peer-add', peerInfo => {
+  console.log('new peer:', peerInfo)
 })
 
 const db = await createMultiWriterDB(sdk, discovery)

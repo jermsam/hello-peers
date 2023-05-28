@@ -31,6 +31,7 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
         sawNew = true
       }
       if (sawNew) newDBExt.broadcast(Array.from(DBCores))
+      console.log('got new dbs message, current inputs count:', DBCores.size)
     }
   })
   newDBExt.broadcast(Array.from(DBCores))
