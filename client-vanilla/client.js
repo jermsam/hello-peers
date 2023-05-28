@@ -6,7 +6,7 @@ import goodbye from 'graceful-goodbye'
 import b4a from 'b4a'
 
 import * as SDK from 'hyper-sdk'
-import { createMultiWriterDB, createDB } from './db'
+import { createMultiWriterDB } from './db'
 import { setTodo, createTodo, configTodo, todoList } from './view'
 const { crypto, WebSocket } = window
 
@@ -34,7 +34,6 @@ discovery.on('peer-add', peerInfo => {
 })
 
 const db = await createMultiWriterDB(sdk, discovery)
-// const db = createDB(await sdk.getBee('todo-app'))
 goodbye(async () => {
   await db.close()
   await discovery.close()
@@ -43,19 +42,14 @@ goodbye(async () => {
 const todoCollection = db.collection('todo')
 await todoCollection.createIndex(['text'])
 await todoCollection.createIndex(['done', 'text'])
-// db.bee.core.on('append', async () => {
-console.log(db.autobase)
 db.autobase.on('append', async () => {
-  console.log(db.autobase)
   for await (const todo of todoCollection.find()) {
-    console.log('a doc')
     const todoElement = document.getElementById(todo._id.toString())
     if (!todoElement) {
       setTodo(todo)
     } else {
       const toReplaceWith = createTodo(todo)
       if (todoElement.innerHTML === toReplaceWith.innerHTML) continue
-      console.log('different todo detected')
       todoElement.replaceWith(toReplaceWith)
       configTodo(todo)
     }

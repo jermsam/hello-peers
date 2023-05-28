@@ -40,7 +40,7 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
         newDBExt.broadcast(Array.from(DBCores))
         console.log('got new dbs message, current inputs count:', DBCores.size)
         console.log('autobase inputs count:', autobase.inputs.filter(core => core.readable).length)
-        console.log(Array.from(DBCores).join('\n'))
+        console.log('autobase status:', autobase.view.core.status)
       }
     }
   })
@@ -156,14 +156,14 @@ class Autobee {
 }
 
 function getKeyBufferWithPrefix (key, prefix) {
-  return prefix ? b4a.concat([b4a.from(prefix.buffer), b4a.from(key)]) : b4a.from(key)
+  return prefix ? b4a.concat([b4a.from(prefix), b4a.from(key)]) : b4a.from(key)
 }
 // A real apply function would need to handle conflicts, beyond last-one-wins.
 async function applyAutobeeBatch (bee, batch) {
   const b = bee.batch({ update: false })
   for (const node of batch) {
     const op = BSON.deserialize(node.value)
-    const bufKey = getKeyBufferWithPrefix(op.key, op.prefix)
+    const bufKey = getKeyBufferWithPrefix(op.key.buffer || op.key, op.prefix.buffer || op.prefix)
     if (op.type === 'put') {
       await b.put(bufKey, op.value.buffer)
     }

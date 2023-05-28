@@ -20,7 +20,7 @@
     "bson": "^5.3.0",
     "graceful-goodbye": "^1.2.1",
     "hyper-sdk": "^4.2.5",
-    "hyperbee": "^2.12.0",
+    "hyperbee": "github:holepunchto/hyperbee",
     "hyperdeebee": "github:Telios-org/hyperdeebee",
     "hyperswarm": "^4.4.1",
     "random-access-idb": "^1.2.2"
