@@ -38,6 +38,7 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
   return db
 
   async function handleNewDBURL (dbUrl) {
+    DBCores.add(dbUrl)
     autobase.addInput(await sdk.get(dbUrl))
   }
 }
