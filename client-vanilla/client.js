@@ -74,8 +74,8 @@ export function addTodo (todo) {
 }
 export function toggleTodo (_id) {
   return todoCollection.find({ _id }).then(([todo]) => {
-    if (todo.done) todoCollection.update({ _id }, { done: false })
-    else todoCollection.update({ _id }, { done: true })
+    if (todo.done) return todoCollection.update({ _id }, { done: false })
+    else return todoCollection.update({ _id }, { done: true })
   })
 }
 export function deleteTodo (_id) {
