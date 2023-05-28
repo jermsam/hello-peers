@@ -14,12 +14,7 @@
 
 <script type="module" src="/main.js"></script>-->
 <section class="p-10">
-  <button
-      class="h-5 px-5 py-4  font-semibold rounded-md bg-black text-white flex items-center cursor-pointer shadow-2xl hover:shadow"
-      id="todo-dialog-open-button"
-  >
-    Add Item
-  </button>
+
   <dialog id="todo-dialog" class="rounded-2xl backdrop:bg-gray-50 shadow-2xl">
     <div class="bg-white p-10 min-w-[300px] relative">
       <svg id="todo-dialog-close-button"
@@ -60,6 +55,12 @@
           <div>
             <p class="text-xl font-bold text-gray-900">Today's Tasks</p>
           </div>
+          <button
+              class="h-5 px-5 py-4  font-semibold rounded-md bg-black text-white flex items-center cursor-pointer shadow-2xl hover:shadow"
+              id="todo-dialog-open-button"
+          >
+            Add Item
+          </button>
           <div class="mt-4 mr-0 mb-0 ml-0 sm:mt-0">
             <p class="sr-only">Search Tasks</p>
             <div class="relative">
@@ -70,8 +71,10 @@
                     21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </p>
               </div>
-              <input placeholder="Search Tasks " type="search" class="border block pt-2 pr-0 pb-2 pl-10 w-full py-2
-                pl-10 border border-gray-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"/>
+              <label>
+                <input placeholder="Search Tasks " type="search" class="border block pt-2 pr-0 pb-2 pl-10 w-full py-2
+                  pl-10 border border-gray-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"/>
+              </label>
             </div>
           </div>
         </div>
