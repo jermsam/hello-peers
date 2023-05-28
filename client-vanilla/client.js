@@ -6,15 +6,20 @@ import goodbye from 'graceful-goodbye'
 import b4a from 'b4a'
 
 import * as SDK from 'hyper-sdk'
-import { createDB } from './db'
+import { createMultiWriterDB } from './db'
 import { setTodo } from './view'
 const { crypto, WebSocket } = window
+
+let resolveReady
+const ready = new Promise(resolve => (resolveReady = resolve))
+ready.then(_ => console.log('all set up'))
 
 const socket = new WebSocket('ws://localhost:3400')
 const dht = new DHT(new Stream(true, socket))
 
 const sdk = await SDK.create({
   storage: false,
+  autoJoin: false,
   swarmOpts: {
     dht
   }
@@ -28,16 +33,20 @@ discovery.on('new-peer', peerInfo => {
   console.log('new peer:', peerInfo.publicKey.toString('hex'))
 })
 
-const db = createDB(await sdk.getBee('todo-app'))
+const db = await createMultiWriterDB(sdk, discovery)
 goodbye(async () => {
   await db.close()
   await discovery.close()
   await sdk.close()
 })
 const todoCollection = db.collection('todo')
-todoCollection.createIndex(['text'])
-todoCollection.createIndex(['done', 'text'])
+await todoCollection.createIndex(['text'])
+await todoCollection.createIndex(['done', 'text'])
+
+resolveReady()
+
+sdk.joinCore(discovery).then(() => console.log('discovering'))
 
 export function addTodo (todo) {
-  todoCollection.insert(todo).then(setTodo)
+  ready.then(() => todoCollection.insert(todo)).then(setTodo)
 }
