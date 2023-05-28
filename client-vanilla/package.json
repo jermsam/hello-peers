@@ -1,0 +1,19 @@
+{
+  "name": "client-vanilla",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^4.3.2"
+  },
+  "dependencies": {
+    "@hyperswarm/dht-relay": "^0.4.1",
+    "buffer": "^6.0.3",
+    "hyperswarm": "^4.4.1"
+  }
+}

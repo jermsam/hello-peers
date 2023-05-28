@@ -21,7 +21,7 @@ import * as BufferSource from 'buffer/'
 
 export function createSwarm (topic: string, port = 3400) {
   const socket = new WebSocket(`ws://localhost:${port}`);
-
+  console.log(socket);
   const dht = new DHT(new Stream(true, socket))
   
   const swarm = new Hyperswarm({dht});
@@ -32,7 +32,8 @@ export function createSwarm (topic: string, port = 3400) {
   
   return { swarm, deinit:  goodbye(async () => {
       await swarm.leave(topicBuffer)
-      await swarm.connections.forEach((conn: Stream) => conn.close())
+      await swarm.connections.forEach((conn: any) => conn.close())
       await swarm.destroy()
     })}
 }
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vite App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
+  <script type="module" src="client.js"></script>
+</head>
+<body>
+<!--<div id="app"></div>
+
+<script type="module" src="/main.js"></script>-->
+<section class="p-10">
+  <button
+      class="h-5 px-5 py-4  font-semibold rounded-md bg-black text-white flex items-center cursor-pointer shadow-2xl hover:shadow"
+      id="todo-dialog-open-button"
+  >
+    Add Item
+  </button>
+  <dialog id="todo-dialog" class="rounded-2xl backdrop:bg-gray-50 shadow-2xl">
+    <div class="bg-white p-10 min-w-[300px] relative">
+      <svg id="todo-dialog-close-button"
+          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+           class="h-6 w-6 absolute right-1 top-1 cursor-pointer">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+
+      <div class="flex flex-col gap-2">
+        <h3 class="text-2xl">Add Item</h3>
+        <form id="todo-form">
+          <div>
+            <label>
+<textarea
+    id="todo-text"
+    class="focus:ring-2 focus:ring-gray-950 focus:outline-none appearance-none w-full text-sm leading-6 text-slate-900 placeholder-slate-400 rounded-md py-2 pl-10 ring-1 ring-slate-200 shadow-sm"
+>
+
+</textarea>
+            </label>
+            <!--    {field.error && <div class={'text-red-800'}>{field.error}</div>}-->
+          </div>
+          <div class="flex justify-end mt-5">
+            <button type="submit"
+                    class="h-5 px-5 py-4  font-semibold rounded-md bg-black text-white flex items-center cursor-pointer shadow-2xl hover:shadow">
+              Add
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </dialog>
+  <ul id="todo-list">
+  </ul>
+</section>
+
+</body>
+</html>
