@@ -5,18 +5,19 @@ import goodbye from 'graceful-goodbye'
 // import * as BufferSource from 'buffer/'
 import b4a from 'b4a'
 import * as SDK from 'hyper-sdk'
+const { crypto, WebSocket } = window
 
 const socket = new WebSocket('ws://localhost:3400')
 const dht = new DHT(new Stream(true, socket))
 
 const sdk = await SDK.create({
-  storage: 'demo-p2p-todo-app',
+  storage: false,
   swarmOpts: {
     dht
   }
 })
 
-const topicBuffer = b4a.from('say a good hello', 'hex')
+const topicBuffer = await crypto.subtle.digest('SHA-256', b4a.from('say a good hello', 'hex')).then(b4a.from)
 
 const discovery = await sdk.get(topicBuffer)
 
