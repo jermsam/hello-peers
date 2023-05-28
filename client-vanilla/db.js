@@ -4,6 +4,7 @@ import Autobase from 'autobase'
 import Hyperbee from 'hyperbee'
 import b4a from 'b4a'
 import { BSON } from 'bson'
+import goodbye from 'graceful-goodbye'
 
 const defaultMultiWriterOpts = {
   extPrefix: '',
@@ -14,6 +15,9 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
   const IOCore = await sdk.namespace(name)
   const localInput = IOCore.get({ name: 'local-input' })
   const localOutput = IOCore.get({ name: 'local-output' })
+  goodbye(async () => {
+    await Promise.all([localInput.close(), localOutput.close()])
+  })
   await Promise.all([localInput.ready(), localOutput.ready()])
   const autobase = new Autobase({ localInput, inputs: [localInput], localOutput, outputs: [localOutput] })
   const localBee = new Autobee(autobase)
@@ -29,14 +33,14 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
       let sawNew = false
       for (const db of dbs) {
         if (typeof db !== 'string' || DBCores.has(db)) continue
-        console.log('new db:', db)
         await handleNewDBURL(db)
         sawNew = true
       }
       if (sawNew) {
         newDBExt.broadcast(Array.from(DBCores))
         console.log('got new dbs message, current inputs count:', DBCores.size)
-        console.log(Array.from(DBCores).join('\n\n'))
+        console.log('autobase inputs count:', autobase.inputs.filter(core => core.readable).length)
+        console.log(Array.from(DBCores).join('\n'))
       }
     }
   })
@@ -50,7 +54,6 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
 
   async function handleNewDBURL (dbUrl) {
     DBCores.add(dbUrl)
-    console.log('db key:', dbUrl)
     try {
       await autobase.addInput(await sdk.get(dbUrl))
     } catch (e) {
