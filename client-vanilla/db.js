@@ -28,10 +28,9 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
     onmessage: async dbs => {
       let sawNew = false
       for (const db of dbs) {
-        console.log(db)
-        console.log(b4a.from(db.split(',')))
-        if (!db || typeof db !== 'string' || DBCores.has(b4a.from(db.split(',')))) continue
-        await handleNewDBURL(b4a.from(db.split(',')))
+        if (typeof db === 'string') console.log(db)
+        if (typeof db !== 'string' || DBCores.has(db)) continue
+        await handleNewDBURL(db)
         sawNew = true
       }
       if (sawNew) newDBExt.broadcast(Array.from(DBCores))
@@ -48,7 +47,7 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
 
   async function handleNewDBURL (dbUrl) {
     DBCores.add(dbUrl)
-    autobase.addInput(await sdk.get(dbUrl))
+    autobase.addInput(await sdk.get(b4a.from(dbUrl.split(',').map(Number))))
   }
 }
 
