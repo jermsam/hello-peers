@@ -39,6 +39,7 @@ const todoDialogCloseButton = document.getElementById('todo-dialog-close-button'
 const todoDialog = document.getElementById('todo-dialog')
 const todoForm = document.getElementById('todo-form')
 const todoList = document.getElementById('todo-list')
+const todoText = document.getElementById("todo-text");
 function setTodo(todo) {
   const li = document.createElement('li')
   console.log(todo);
@@ -48,8 +49,8 @@ function setTodo(todo) {
 
 todoForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  const text = document.getElementById("todo-text");
-  if (text.value === "") {
+  
+  if (todoText.value === "") {
     // throw error
     const err = 'please enter a todo text';
     console.error(err);
@@ -57,16 +58,11 @@ todoForm.addEventListener("submit", (e) => {
   } else {
     // perform operation with form input
     const todo = {
-      text: text.value,
+      text: todoText.value,
       done: false
     }
-    console.log(swarm.connections);
-    swarm.connections.forEach((conn) => {
-      console.log(conn);
-      // conn.send(JSON.stringify(todo));
-      conn.write(JSON.stringify(todo))
-    })
-    
+    swarm.connections.forEach((conn) =>  conn.write(JSON.stringify(todo)))
+    todoText.value=''
     todoDialog.close()
   }
   // handle submit
