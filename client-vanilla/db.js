@@ -14,9 +14,10 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
   const IOCore = await sdk.namespace(name)
   const localInput = IOCore.get({ name: 'local-input' })
   const localOutput = IOCore.get({ name: 'local-output' })
-  const autobase = new Autobase({ localInput, inputs: [localInput], localOutput })
+  await Promise.all([localInput.ready(), localOutput.ready()])
+  const autobase = new Autobase({ localInput, inputs: [localInput], localOutput, outputs: [localOutput] })
   const localBee = new Autobee(autobase)
-  await Promise.all([localInput.ready(), localOutput.ready(), localBee.ready()])
+  await localBee.ready()
   const db = createDB(localBee)
 
   const DBCores = new Set()
@@ -34,8 +35,12 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
       console.log('got new dbs message, current inputs count:', DBCores.size)
     }
   })
+  discoveryCore.on('peer-add', () => {
+    newDBExt.broadcast(Array.from(DBCores))
+  })
   newDBExt.broadcast(Array.from(DBCores))
 
+  db.autobase = autobase
   return db
 
   async function handleNewDBURL (dbUrl) {
@@ -45,8 +50,7 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
 }
 
 export function createDB (bee) {
-  const db = new DB(bee)
-  return db
+  return new DB(bee)
 }
 
 class Autobee {
