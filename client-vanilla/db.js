@@ -21,14 +21,17 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
   const db = createDB(localBee)
 
   const DBCores = new Set()
-  DBCores.add(localInput.key)
+  DBCores.add(localInput.key.toString())
+  console.log(localInput.key.toString())
   const newDBExt = discoveryCore.registerExtension(extPrefix + '-db-sync', {
     encoding: 'json',
     onmessage: async dbs => {
       let sawNew = false
       for (const db of dbs) {
-        if (!db || DBCores.has(db)) continue
-        await handleNewDBURL(db)
+        console.log(db)
+        console.log(b4a.from(db.split(',')))
+        if (!db || typeof db !== 'string' || DBCores.has(b4a.from(db.split(',')))) continue
+        await handleNewDBURL(b4a.from(db.split(',')))
         sawNew = true
       }
       if (sawNew) newDBExt.broadcast(Array.from(DBCores))
