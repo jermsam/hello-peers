@@ -21,7 +21,7 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
   const db = createDB(localBee)
 
   const DBCores = new Set()
-  DBCores.add(localInput.publicKey)
+  DBCores.add(localInput.key)
   const newDBExt = discoveryCore.registerExtension(extPrefix + '-db-sync', {
     encoding: 'json',
     onmessage: async dbs => {
