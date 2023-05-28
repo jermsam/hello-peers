@@ -4,7 +4,9 @@ import Stream from '@hyperswarm/dht-relay/ws'
 import goodbye from 'graceful-goodbye'
 // import * as BufferSource from 'buffer/'
 import b4a from 'b4a'
+
 import * as SDK from 'hyper-sdk'
+import { createDB } from './db'
 const { crypto, WebSocket } = window
 
 const socket = new WebSocket('ws://localhost:3400')
@@ -21,18 +23,19 @@ const topicBuffer = await crypto.subtle.digest('SHA-256', b4a.from('say a good h
 
 const discovery = await sdk.get(topicBuffer)
 
-goodbye(async () => {
-  await discovery.close()
-  await sdk.close()
-})
-
 discovery.on('new-peer', peerInfo => {
   console.log('new peer:', peerInfo.publicKey.toString('hex'))
 })
-const newDataExt = discovery.registerExtension(topicBuffer + 'new-data', {
-  encoding: 'json',
-  onmessage: setTodo
+
+const db = createDB(await sdk.getBee('todo-app'))
+goodbye(async () => {
+  await db.close()
+  await discovery.close()
+  await sdk.close()
 })
+const todoCollection = db.collection('todo')
+todoCollection.createIndex(['text'])
+todoCollection.createIndex(['done', 'text'])
 
 const todoDialogOpenButton = document.getElementById('todo-dialog-open-button')
 const todoDialogCloseButton = document.getElementById('todo-dialog-close-button')
@@ -40,9 +43,18 @@ const todoDialog = document.getElementById('todo-dialog')
 const todoForm = document.getElementById('todo-form')
 const todoList = document.getElementById('todo-list')
 const todoText = document.getElementById('todo-text')
+
+db.bee.core.on('append', async () => {
+  const setTodos = Array.from(todoList.children).map(todo => todo.key)
+  for await (const todo of todoCollection.find()) {
+    if (todo._id in setTodos) continue
+    setTodo(todo)
+  }
+})
 function setTodo (todo) {
   const li = document.createElement('li')
   console.log(todo)
+  li.key = todo._id
   li.innerHTML = todo.text
   todoList.appendChild(li)
 }
@@ -61,8 +73,7 @@ todoForm.addEventListener('submit', (e) => {
       text: todoText.value,
       done: false
     }
-    newDataExt.broadcast(todo)
-    setTodo(todo)
+    todoCollection.insert(todo)
     todoText.value = ''
     todoDialog.close()
   }
