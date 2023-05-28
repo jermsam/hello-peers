@@ -62,6 +62,7 @@ todoForm.addEventListener("submit", (e) => {
       done: false
     }
     swarm.connections.forEach((conn) =>  conn.write(JSON.stringify(todo)))
+    setTodo(todo)
     todoText.value=''
     todoDialog.close()
   }
