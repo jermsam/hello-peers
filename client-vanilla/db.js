@@ -1,18 +1,18 @@
 import { DB } from 'hyperdeebee'
-// import Autobee from 'hyperdeebee/autodeebee'
-// import Autobase from 'autobase'
+import Autobee from 'hyperdeebee/autodeebee'
+import Autobase from 'autobase'
 
-// const defaultMultiWriterOpts = {
-//  extPrefix: '',
-//  name: 'db'
-// }
+const defaultMultiWriterOpts = {
+  extPrefix: '',
+  name: 'db'
+}
 
-/*
 export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name } = defaultMultiWriterOpts) {
   const localInput = await sdk.get(name + '-input')
   const localOutput = await sdk.get(name + '-output')
   const autobase = new Autobase({ localInput, inputs: [localInput], localOutput })
   const localBee = new Autobee(autobase)
+  await Promise.all([localInput.ready(), localOutput.ready(), localBee.ready()])
   const db = createDB(localBee)
 
   const DBCores = new Set()
@@ -37,7 +37,6 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
     autobase.addInput(await sdk.get(dbUrl))
   }
 }
-*/
 
 export function createDB (bee) {
   const db = new DB(bee)
