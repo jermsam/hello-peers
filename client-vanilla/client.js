@@ -50,7 +50,7 @@ function setTodo (todo) {
                             </div>
 
                             <div class="flex flex-col items-center mx-5 space-y-1">
-                                <h2 class="text-lg font-medium text-gray-700 sm:text-2xl dark:text-gray-950"> ${todo.text}</h2>
+                                <h2 id="line-${todo.text}" class="text-lg font-medium text-gray-700 sm:text-2xl dark:text-gray-950"> ${todo.text}</h2>
                             </div>
                         </div>
                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 cursor-pointer">
@@ -67,7 +67,9 @@ function setTodo (todo) {
     `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
   <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
 </svg>
-`
+`;
+  todo.done ? document.getElementById('line-'+todo.text).classList.add('line-through') :
+    document.getElementById('line-'+todo.text).classList.remove('line-through')
 }
 
 todoForm.addEventListener('submit', (e) => {
