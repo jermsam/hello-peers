@@ -16,6 +16,7 @@
     "b4a": "^1.6.4",
     "buffer": "^6.0.3",
     "graceful-goodbye": "^1.2.1",
+    "hyper-sdk": "^4.2.5",
     "hyperswarm": "^4.4.1"
   }
 }
