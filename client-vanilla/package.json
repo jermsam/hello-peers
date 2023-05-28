@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@hyperswarm/dht-relay": "^0.4.1",
-    "autobase": "github:holepunchto/autobase",
+    "autobase": "github:lejeunerenard/autobase#merge-fix-session-and-apply",
     "b4a": "^1.6.4",
     "bson": "^5.3.0",
     "graceful-goodbye": "^1.2.1",

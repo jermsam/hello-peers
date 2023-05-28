@@ -34,6 +34,8 @@ discovery.on('peer-add', peerInfo => {
 })
 
 const db = await createMultiWriterDB(sdk, discovery)
+const streamBee = bee => bee.createHistoryStream({ live: true })
+db.autobase.ready().then(_ => consumeHistoryStream(streamBee(db.bee)))
 goodbye(async () => {
   await db.close()
   await discovery.close()
@@ -74,4 +76,11 @@ export function toggleTodo (_id) {
 }
 export function deleteTodo (_id) {
   return todoCollection.delete({ _id })
+}
+
+async function consumeHistoryStream (stream) {
+  for await (const entry of stream) {
+    console.log('history entry:')
+    console.log(entry)
+  }
 }
