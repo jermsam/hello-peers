@@ -30,7 +30,7 @@ const topicBuffer = await crypto.subtle.digest('SHA-256', b4a.from('say a good h
 const discovery = await sdk.get(topicBuffer)
 
 discovery.on('peer-add', peerInfo => {
-  console.log('new peer:', peerInfo.remotePublicKey?.toString())
+  console.log('new peer, peers count:', discovery.peers.length)
 })
 
 const db = await createMultiWriterDB(sdk, discovery)
