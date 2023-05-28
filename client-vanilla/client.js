@@ -30,7 +30,7 @@ discovery.on('new-peer', peerInfo => {
   console.log('new peer:', peerInfo.publicKey.toString('hex'))
 })
 const newDataExt = discovery.registerExtension(topicBuffer + 'new-data', {
-  format: 'json',
+  encoding: 'json',
   onmessage: setTodo
 })
 
