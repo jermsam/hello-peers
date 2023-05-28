@@ -4,6 +4,7 @@ import Autobase from 'autobase'
 import Hyperbee from 'hyperbee'
 import b4a from 'b4a'
 import { BSON } from 'bson'
+import goodbye from 'graceful-goodbye'
 
 const defaultMultiWriterOpts = {
   extPrefix: '',
@@ -14,6 +15,9 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
   const IOCore = await sdk.namespace(name)
   const localInput = IOCore.get({ name: 'local-input' })
   const localOutput = IOCore.get({ name: 'local-output' })
+  goodbye(async () => {
+    await Promise.all([localInput.close(), localOutput.close()])
+  })
   await Promise.all([localInput.ready(), localOutput.ready()])
   const autobase = new Autobase({ localInput, inputs: [localInput], localOutput, outputs: [localOutput] })
   const localBee = new Autobee(autobase)
@@ -46,15 +50,7 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
   newDBExt.broadcast(Array.from(DBCores))
 
   db.autobase = autobase
-  return {
-    db,
-    async deinit () {
-      await Promise.all([localInput.close(), localOutput.close()])
-      await db.close()
-      await localBee.close()
-      await autobase.close()
-    }
-  }
+  return db
 
   async function handleNewDBURL (dbUrl) {
     DBCores.add(dbUrl)
