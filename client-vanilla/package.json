@@ -19,6 +19,7 @@
     "graceful-goodbye": "^1.2.1",
     "hyper-sdk": "^4.2.5",
     "hyperdeebee": "github:Telios-org/hyperdeebee",
-    "hyperswarm": "^4.4.1"
+    "hyperswarm": "^4.4.1",
+    "random-access-idb": "^1.2.2"
   }
 }
