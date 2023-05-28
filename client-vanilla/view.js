@@ -1,11 +1,19 @@
-import { addTodo, toggleTodo, deleteTodo } from './client'
+import goodbye from 'graceful-goodbye'
+import { createDB } from './client'
+const { WebSocket } = window
+let db
+const socketUrl = 'ws://localhost:3400/'
+
+goodbye(_ => db.deinit())
 
 const todoDialogOpenButton = document.getElementById('todo-dialog-open-button')
 const todoDialogCloseButton = document.getElementById('todo-dialog-close-button')
 const todoDialog = document.getElementById('todo-dialog')
 const todoForm = document.getElementById('todo-form')
-export const todoList = document.getElementById('todo-list')
 const todoText = document.getElementById('todo-text')
+const todoList = document.getElementById('todo-list')
+
+setDB('say a good hello', socketUrl, todoList)
 
 export function setTodo (todo) {
   todoList.appendChild(createTodo(todo))
@@ -19,8 +27,8 @@ export function configTodo (todo) {
     : '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">\n' +
     '  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />\n' +
     '</svg>'
-  document.getElementById(`checkbox-${todo._id}`).onclick = () => toggleTodo(todo._id)
-  document.getElementById(`delete-${todo._id}`).onclick = () => deleteTodo(todo._id)
+  document.getElementById(`checkbox-${todo._id}`).onclick = () => db.toggleTodo(todo._id)
+  document.getElementById(`delete-${todo._id}`).onclick = () => db.deleteTodo(todo._id)
   const textLine = document.getElementById(`text-${todo._id}`)
   todo.done ? textLine.classList.add('line-through') : textLine.classList.remove('line-through')
 }
@@ -61,7 +69,7 @@ todoForm.addEventListener('submit', (e) => {
       text: todoText.value,
       done: false
     }
-    addTodo(todo)
+    db.addTodo(todo)
     todoText.value = ''
     todoDialog.close()
   }
@@ -75,3 +83,9 @@ todoDialogOpenButton.addEventListener('click', function openDialog () {
 todoDialogCloseButton.addEventListener('click', function closeDialog () {
   todoDialog.close()
 })
+
+async function setDB (topic, socketUrl, todoList) {
+  if (db) await db.deinit()
+  todoList.innerHTML = ''
+  db = await createDB(topic, new WebSocket(socketUrl), todoList)
+}
