@@ -7,7 +7,7 @@ import b4a from 'b4a'
 
 import * as SDK from 'hyper-sdk'
 import { createDB } from './db'
-import { setTodo, getTodoList } from './view'
+import { setTodo } from './view'
 const { crypto, WebSocket } = window
 
 const socket = new WebSocket('ws://localhost:3400')
@@ -38,14 +38,6 @@ const todoCollection = db.collection('todo')
 todoCollection.createIndex(['text'])
 todoCollection.createIndex(['done', 'text'])
 
-db.bee.core.on('append', async () => {
-  const setTodos = getTodoList().map(todo => todo.key)
-  for await (const todo of todoCollection.find()) {
-    if (todo._id in setTodos) continue
-    setTodo(todo)
-  }
-})
-
 export function addTodo (todo) {
-  todoCollection.insert(todo)
+  todoCollection.insert(todo).then(setTodo)
 }

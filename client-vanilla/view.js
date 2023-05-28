@@ -7,15 +7,11 @@ const todoForm = document.getElementById('todo-form')
 const todoList = document.getElementById('todo-list')
 const todoText = document.getElementById('todo-text')
 
-export function getTodoList () {
-  return Array.from(todoList.children)
-}
 export function setTodo (todo) {
   const section = document.createElement('section')
   section.key = todo._id
   section.innerHTML = `
 <div class="flex items-center justify-between max-w-2xl px-8 py-4 mx-auto border cursor-pointer rounded-xl dark:border-gray-700 m-10">
-  li.key = todo._id
                         <div class="flex items-center">
                             <div id="checkbox-${todo._id}">
                            
@@ -31,15 +27,15 @@ export function setTodo (todo) {
                     </div>
 `
   todoList.appendChild(section)
-  
-  document.getElementById(`checkbox-${todo._id}`).innerHTML = todo.done ?
-    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">\n' +
+
+  document.getElementById(`checkbox-${todo._id}`).innerHTML = todo.done
+    ? '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">\n' +
     '  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />\n' +
-    '</svg>':
-    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">\n' +
+    '</svg>'
+    : '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">\n' +
     '  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />\n' +
     '</svg>'
-  const textLine = document.getElementById(`text-${todo._id}`);
+  const textLine = document.getElementById(`text-${todo._id}`)
   todo.done ? textLine.classList.add('line-through') : textLine.classList.remove('line-through')
 }
 
