@@ -27,9 +27,9 @@ A Hypercore can only be modified by its creator; internally it signs updates wit
 It uses a single Hypercore for storage, using a technique called [embedded indexing](https://www.luciehaskins.com/resources/Mauer_EmbeddedIndexing.pdf)
 As with the Hypercore, a Hyperbee can only have a single writer on a single machine; the creator of the Hyperdrive is the only person who can modify it because they're the only one with the private key. That said, the writer can replicate to many readers, as described in the Hypercore.
 
-3. Autobase (Experimental module used to transform higher-level data structures (like Hyperbee) into multiwriter data structures with minimal additional work)
+3. Autobase (experimental module used to transform higher-level data structures (like Hyperbee) into multiwriter data structures with minimal additional work)
 
 Autobase is used to automatically rebase multiple causally-linked Hypercores into a single, linearized Hypercore. 
 
-4. Hyperdeebee (A MongoDB-like database built on top of Hyperbee with support for indexing based on [Hyperbee Indexed DB](https://gist.github.com/RangerMauve/ae271204054b62d9a649d70b7d218191))
+4. Hyperdeebee (a MongoDB-like database built on top of Hyperbee with support for indexing based on [Hyperbee Indexed DB](https://gist.github.com/RangerMauve/ae271204054b62d9a649d70b7d218191))
 
