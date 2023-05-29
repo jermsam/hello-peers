@@ -1,5 +1,8 @@
 # hello-peers
 A demo for localFirst P2P with Holepunch's eco-system in the browser; served over websockets and styled with tailwindcss
+
+![alt text](https://github.com/jermsam/hello-peers/blob/main/browser-todo-app-with-hypercores.png?raw=true)
+
 ## Relay Server
 
 1. Hyperswarm (a [Kademlia DHT](https://www.youtube.com/watch?v=1QdKhNpsj8M) with [hole-punching](https://www.geeksforgeeks.org/nat-hole-punching-in-computer-network/) builtin)
