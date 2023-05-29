@@ -17,7 +17,7 @@ you can connect to them regardless of where they're located, even if they move b
 
 The protocol is versioned and built on top of [protomux](https://github.com/mafintosh/protomux).
 
-## Data management
+## Data Management
 1. Hypercore (a secure, distributed [append-only log](https://en.wikipedia.org/wiki/Append-only) built for sharing large datasets and streams of real-time data)
 
 A Hypercore can only be modified by its creator; internally it signs updates with a private key that's meant to live on a single machine, and should never be shared. However, the writer can replicate to many readers, in a manner similar to BitTorrent but Unlike BitTorrent, a Hypercore can be modified after its initial creation, and peers can receive live update notifications whenever the writer adds new blocks.
