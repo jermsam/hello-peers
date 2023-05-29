@@ -19,10 +19,17 @@ The protocol is versioned and built on top of [protomux](https://github.com/mafi
 
 ## Data management
 1. Hypercore (a secure, distributed [append-only log](https://en.wikipedia.org/wiki/Append-only) built for sharing large datasets and streams of real-time data)
+
 A Hypercore can only be modified by its creator; internally it signs updates with a private key that's meant to live on a single machine, and should never be shared. However, the writer can replicate to many readers, in a manner similar to BitTorrent but Unlike BitTorrent, a Hypercore can be modified after its initial creation, and peers can receive live update notifications whenever the writer adds new blocks.
+
 2. Hyperbee (an append only [B-tree](https://www.educba.com/b-tree-in-data-structure/) based on Hypercore.
+
 It uses a single Hypercore for storage, using a technique called [embedded indexing](https://www.luciehaskins.com/resources/Mauer_EmbeddedIndexing.pdf)
 As with the Hypercore, a Hyperbee can only have a single writer on a single machine; the creator of the Hyperdrive is the only person who can modify it because they're the only one with the private key. That said, the writer can replicate to many readers, as described in the Hypercore.
+
 3. Autobase (Experimental module used to transform higher-level data structures (like Hyperbee) into multiwriter data structures with minimal additional work)
+
 Autobase is used to automatically rebase multiple causally-linked Hypercores into a single, linearized Hypercore. 
+
 4. Hyperdeebee (A MongoDB-like database built on top of Hyperbee with support for indexing based on [Hyperbee Indexed DB](https://gist.github.com/RangerMauve/ae271204054b62d9a649d70b7d218191))
+
