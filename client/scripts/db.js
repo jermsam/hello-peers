@@ -111,7 +111,7 @@ class Autobee {
 
   flush () { }
 
-  async put (key, value, opts = {}) {
+  async put (key, value, /*opts = {}*/) {
     const op = b4a.from(
       BSON.serialize({ type: 'put', key, value, prefix: this.bee.prefix })
     )
@@ -119,7 +119,7 @@ class Autobee {
     return await this.autobase.append(op)
   }
 
-  async del (key, opts = {}) {
+  async del (key,/* opts = {}*/) {
     const op = b4a.from(
       BSON.serialize({ type: 'del', key, prefix: this.bee.prefix })
     )
