@@ -1,7 +1,7 @@
 # hello-peers
 A demo for localFirst P2P with Holepunch's eco-system in the browser; served over websockets and styled with tailwindcss
 
-![alt text](https://github.com/jermsam/hello-peers/blob/main/browser-todo-app-with-hypercores.png?raw=true)
+![alt text](https://github.com/jermsam/hello-peers/blob/main/browser-todo-app-with-hypercores.png)
 
 ## Relay Server
 
