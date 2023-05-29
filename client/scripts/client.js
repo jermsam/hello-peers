@@ -6,8 +6,8 @@ import goodbye from 'graceful-goodbye'
 import b4a from 'b4a'
 
 import * as SDK from 'hyper-sdk'
-import { createMultiWriterDB } from './db'
-import { setTodo, createTodo, configTodo, todoList } from './view'
+import { createMultiWriterDB } from './db.js'
+import { setTodo, createTodo, configTodo, todoList } from './view.js'
 const { crypto, WebSocket } = window
 
 let resolveReady

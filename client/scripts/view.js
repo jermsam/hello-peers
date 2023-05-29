@@ -1,4 +1,4 @@
-import { addTodo, toggleTodo, deleteTodo } from './client'
+import { addTodo, toggleTodo, deleteTodo } from './client.js'
 
 const todoDialogOpenButton = document.getElementById('todo-dialog-open-button')
 const todoDialogCloseButton = document.getElementById('todo-dialog-close-button')
