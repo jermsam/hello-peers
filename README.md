@@ -37,3 +37,9 @@ Autobase is used to automatically rebase multiple causally-linked Hypercores int
 
 4. Hyperdeebee (a MongoDB-like database built on top of Hyperbee with support for indexing based on [Hyperbee Indexed DB](https://gist.github.com/RangerMauve/ae271204054b62d9a649d70b7d218191))
 
+## The Software Development Kit
+. hyper-sdk (A Software Development Kit for the hypercore-protocol)
+As you might have already noticed, Hypercore-protocol and it's ecosystem consists of a bunch of low level building blocks for working with data in distributed applications. Although this modularity makes it easy to mix and match pieces, it adds complexity when it comes to actually building something.
+
+The Hyper SDK combines the lower level pieces of the Hyper stack into high level APIs that you can use across platforms so that you can focus on your application rather than the gritty details of how it works.
+
