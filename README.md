@@ -1,5 +1,5 @@
 # hello-peers
-LocalFirst P2P with Holepunch's eco-system served over websockets
+LocalFirst P2P with Holepunch's eco-system served over websockets and styled with tailwindcss
 ## Relay Server
 
 1. Hyperswarm (a [Kademlia DHT](https://www.youtube.com/watch?v=1QdKhNpsj8M) with [hole-punching](https://www.geeksforgeeks.org/nat-hole-punching-in-computer-network/) builtin)
