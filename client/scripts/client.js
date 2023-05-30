@@ -44,27 +44,9 @@ goodbye(async () => {
 const todoCollection = db.collection('todo')
 await todoCollection.createIndex(['text'])
 await todoCollection.createIndex(['done', 'text'])
-// ready.then(createWatcher)
-
-db.autobase.on('append', async () => {
-  for await (const todo of todoCollection.find()) {
-    const todoElement = document.getElementById(todo._id.toString())
-    if (!todoElement) setTodo(todo)
-    else {
-      const toReplaceWith = createTodo(todo)
-      if (todoElement.innerHTML === toReplaceWith.innerHTML) continue
-      todoElement.replaceWith(toReplaceWith)
-      configTodo(todo)
-    }
-  }
-  todoList.querySelectorAll('section').forEach(todo =>
-    todoCollection.find({ _id: todo.id }).then(query => {
-      if (query.length === 0) todo.remove()
-    })
-  )
-})
-
 resolveReady()
+
+createWatcher()
 
 sdk.joinCore(discovery).then(() => console.log('discovering'))
 

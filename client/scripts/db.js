@@ -19,7 +19,7 @@ export async function createMultiWriterDB (sdk, discoveryCore, { extPrefix, name
     await Promise.all([localInput.close(), localOutput.close()])
   })
   await Promise.all([localInput.ready(), localOutput.ready()])
-  const autobase = new Autobase({ localInput, inputs: [localInput], localOutput, outputs: [localOutput] })
+  const autobase = new Autobase({ localInput, inputs: [localInput], localOutput })
   const localBee = new Autobee(autobase)
   await localBee.ready()
   const db = createDB(localBee)
