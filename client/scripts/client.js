@@ -68,11 +68,6 @@ function createWatcher () {
 }
 async function updateStream (node) {
   const { key, value, type } = node
-  console.log('watched saw', {
-    key: String.fromCharCode(...key).split('\u0000').join('/'),
-    value: String.fromCharCode(...key).split('\u0000').join('/'),
-    type
-  })
   if (b4a.includes(key, 'doc')) {
     const doc = BSON.deserialize(value)
     const todoElement = document.getElementById(doc._id.toString())
