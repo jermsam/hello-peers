@@ -43,3 +43,6 @@ As you might have already noticed, Hypercore-protocol and it's ecosystem consist
 
 The Hyper SDK combines the lower level pieces of the Hyper stack into high level APIs that you can use across platforms so that you can focus on your application rather than the gritty details of how it works.
 
+## The blog
+Find the blog that explains how this demo was put together [HERE](https://blog.jitpomi.com/web-based-local-first-p2p-development-with-holepunchs-ecosystem)
+
