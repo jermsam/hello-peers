@@ -1,7 +1,7 @@
 import DHT from '@hyperswarm/dht-relay'
 import Stream from '@hyperswarm/dht-relay/ws'
 // @ts-ignore
-import goodbye from 'graceful-goodbye'
+// import goodbye from 'graceful-goodbye'
 // import * as BufferSource from 'buffer/'
 import b4a from 'b4a'
 
@@ -27,28 +27,16 @@ const sdk = await SDK.create({
   }
 })
 
-const topicBuffer = await crypto.subtle.digest('SHA-256', b4a.from('say a good hello', 'hex')).then(b4a.from)
+const db = await createMultiWriterDB(sdk)
 
-const discovery = await sdk.get(topicBuffer)
-
-discovery.on('peer-add', peerInfo => {
-  console.log('new peer, peer:', peerInfo, 'peer count:', discovery.peers.length)
-})
-
-const db = await createMultiWriterDB(sdk, discovery)
-goodbye(async () => {
-  await db.close()
-  await discovery.close()
-  await sdk.close()
-})
 const todoCollection = db.collection('todo')
-await todoCollection.createIndex(['text'])
-await todoCollection.createIndex(['done', 'text'])
+// await todoCollection.createIndex(['text'])
+// await todoCollection.createIndex(['done', 'text'])
 resolveReady()
 
 createWatcher()
 
-sdk.joinCore(discovery).then(() => console.log('discovering'))
+
 
 export function addTodo (todo) {
   ready.then(() => todoCollection.insert(todo))
