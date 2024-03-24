@@ -17,9 +17,9 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@hyperswarm/dht-relay": "^0.4.1",
+    "@hyperswarm/dht-relay": "^0.4.3",
     "express": "^4.18.2",
-    "hyperdht": "^6.5.3",
+    "hyperdht": "^6.13.1",
     "ws": "^8.13.0"
   }
 }
