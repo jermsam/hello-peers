@@ -3,7 +3,8 @@ import Autobase from 'autobase';
 import b4a from 'b4a';
 // import { BSON } from 'bson';
 import goodbye from 'graceful-goodbye';
-import { Autodeebee } from './autodeebee/index.js';
+import { Autodeebee} from './autodeebee/index.js';
+import Hyperbee from 'hyperbee';
 
 const defaultMultiWriterOpts = {
   extPrefix: '',
@@ -26,7 +27,8 @@ async function handleNewDbs(sdk, {dbs, DBCores, autobase, newDBExt} = {}) {
     if (typeof db !== 'string' || DBCores.has(db)) continue;
     DBCores.add(db);
     try {
-      await autobase.addInput(await sdk.get(db));
+      const core = await sdk.get(db);
+      await autobase.append(core);
     } catch (e) {
       console.error('error adding db:', e);
     }
@@ -35,8 +37,8 @@ async function handleNewDbs(sdk, {dbs, DBCores, autobase, newDBExt} = {}) {
   if (sawNew) {
     newDBExt.broadcast(Array.from(DBCores));
     console.log('got new dbs message, current inputs count:', DBCores.size);
-    console.log('autobase inputs count:', autobase.inputs.filter((core) => core.readable).length);
-    console.log('autobase status:', autobase.view.core.status);
+    console.log('autobase inputs count:', autobase.activeWriters);
+    console.log('autobase status:', autobase.view.core);
   }
 }
 
@@ -49,7 +51,7 @@ export async function getDb(sdk,  { autobase, extPrefix = '', options = { primar
   const db = new DB(localBee);
 
   const DBCores = new Set();
-  DBCores.add(autobase.localInput.id);
+  DBCores.add(autobase.localWriter.core.id);
 
   const newDBExt = discovery.registerExtension(extPrefix + '-db-sync', {
     encoding: 'json',
@@ -73,18 +75,35 @@ export async function getDb(sdk,  { autobase, extPrefix = '', options = { primar
   return db;
 }
 
+
+
 export async function createMultiWriterDB(sdk, { extPrefix, name } = defaultMultiWriterOpts) {
   const IOCore = await sdk.namespace(name);
-  const localInput = IOCore.get({ name: 'local-input' });
-  const localOutput = IOCore.get({ name: 'local-output' });
+  // there is no need to get the input and output cores as autobase does that for you now.
 
-  goodbye(async () => {
-    await Promise.all([localInput.close(), localOutput.close()]);
+  const autobase = new Autobase(IOCore,null,{
+    apply: async (batch, view, base) => {
+      // Add .addWriter functionality
+      for (const node of batch) {
+        const op = node.value
+        if ('id' in op) {
+          console.log('\rAdding writer', op.key)
+          await base.addWriter(b4a.from(op.key, 'hex'))
+        }
+      }
+
+      // Pass through to Autobee's apply
+      await Autodeebee.apply(batch, view, base)
+    },
+    open: (store)=> {
+     const core = store.get(name)
+      return  new Hyperbee(core, {
+        extension: false,
+      })
+     }
   });
-
-  await Promise.all([localInput.ready(), localOutput.ready()]);
-  const autobase = new Autobase({ localInput, inputs: [localInput], localOutput });
-  const db = await  getDb(sdk,  {autobase,});
+  await autobase.ready();
+  const db = await  getDb(sdk,  {autobase,extPrefix});
   goodbye(async () => {
     await db.close()
     // await discovery.close()

@@ -9,8 +9,8 @@ import * as SDK from 'hyper-sdk'
 import { RangeWatcher } from '@lejeunerenard/hyperbee-range-watcher-autobase'
 import { BSON } from 'bson'
 import { createMultiWriterDB } from './db.js'
-import { setTodo, createTodo, configTodo, todoList } from './view.js'
-const { crypto, WebSocket } = window
+import { setTodo, createTodo, configTodo } from './view.js'
+const {WebSocket } = window
 
 let resolveReady
 const ready = new Promise(resolve => (resolveReady = resolve))

@@ -1,23 +1,28 @@
-import Hyperbee from 'hyperbee'
 import b4a from 'b4a'
 import { BSON } from 'bson'
 
 export class Autodeebee {
-  constructor (base, opts = {}) {
+  constructor (base, sdk, opts = {}) {
     this.autobase = base
     this.opts = opts
-    if (!opts.sub) {
-      this.autobase.start({
-        unwrap: true,
-        apply: applyAutobeeBatch,
-        view: (core) =>
-          new Hyperbee(core.unwrap(), {
-            ...this.opts,
-            extension: false
-          })
-      })
-      this.bee = this.autobase.view
+    // the open() handler should create the hyperbee for you. This will mean that autobase.view is a hyperbee then and you wont need to create a hyperbee in Autodeebee.
+    this.bee = this.autobase.view
+  }
+
+  static async apply (batch, view) {
+    const b = view.batch({ update: false })
+    for (const node of batch) {
+      if('id' in node.value) continue;
+      const op = BSON.deserialize(node.value)
+      const bufKey = getKeyBufferWithPrefix(op.key.buffer || op.key, op.prefix.buffer || op.prefix)
+      if (op.type === 'put') {
+        await b.put(bufKey, op.value.buffer)
+      }
+      if (op.type === 'del') {
+        await b.del(bufKey)
+      }
     }
+    await b.flush()
   }
 
   ready () {
@@ -33,11 +38,12 @@ export class Autodeebee {
     this.autobase = null
   }
 
-  sub (name) {
+   sub (name) {
     const opts = this.opts
     opts.sub = true
     const auto = new Autodeebee(this.autobase, opts)
-    auto.bee = this.bee.sub(name)
+
+   auto.bee = this.bee.sub(name)
     return auto
   }
 
@@ -47,31 +53,33 @@ export class Autodeebee {
 
   flush () { }
 
-  async put (key, value /*, opts = {} */) {
+  put (key, value, /*opts={}*/) {
     const op = b4a.from(
       BSON.serialize({ type: 'put', key, value, prefix: this.bee.prefix })
     )
 
-    return await this.autobase.append(op)
+    return  this.autobase.append(op)
   }
 
-  async del (key/*, opts = {} */) {
+  del (key, /*opts = {}*/ ) {
     const op = b4a.from(
       BSON.serialize({ type: 'del', key, prefix: this.bee.prefix })
     )
-    return await this.autobase.append(op)
+    return this.autobase.append(op)
   }
 
-  async get (key) {
-    return await this.bee.get(key)
+  get (key, opts={}) {
+    return this.bee.get(key,opts)
   }
 
-  addInput (input) {
-    this.autobase.addInput(input)
+  // addInput & removeInput will need to be refactored for the new way of managing writers. You add a writer via base.addWriter(key, { indexer = true })
+  addInput (input, opts={indexer: true}) {
+    const key = input.key;
+    return this.autobase.addWriter(key, opts)
   }
 
-  removeInput (input) {
-    this.autobase.removeInput(input)
+  removeInput (key) {
+    return this.autobase.removeWriter(key)
   }
 
   createReadStream (opts) {
@@ -89,23 +97,13 @@ export class Autodeebee {
   version () {
     return this.bee.version
   }
+
+  peek (opts) {
+    return this.bee.peek(opts)
+  }
 }
 
-function getKeyBufferWithPrefix (key, prefix) {
+export function getKeyBufferWithPrefix (key, prefix) {
   return prefix ? b4a.concat([b4a.from(prefix), b4a.from(key)]) : b4a.from(key)
 }
-// A real apply function would need to handle conflicts, beyond last-one-wins.
-async function applyAutobeeBatch (bee, batch) {
-  const b = bee.batch({ update: false })
-  for (const node of batch) {
-    const op = BSON.deserialize(node.value)
-    const bufKey = getKeyBufferWithPrefix(op.key.buffer || op.key, op.prefix.buffer || op.prefix)
-    if (op.type === 'put') {
-      await b.put(bufKey, op.value.buffer)
-    }
-    if (op.type === 'del') {
-      await b.del(bufKey)
-    }
-  }
-  await b.flush()
-}
+

@@ -86,21 +86,19 @@ export function createTodo (todo) {
 todoForm.addEventListener('submit', (e) => {
   e.preventDefault()
 
-  if (todoText.value === '') {
-    // throw error
-    const err = 'please enter a todo text'
-    console.error(err)
-    document.getElementById('todo-error').innerHTML = err
-  } else {
-    // perform operation with form input
+  if(/\w/.test(todoText.value.trim())) {
     const todo = {
       text: todoText.value,
       done: false
     }
     addTodo(todo)
+
     todoText.value = ''
     todoDialog.close()
+  } else {
+    document.getElementById('todo-error').innerHTML = 'please enter a todo text'
   }
+
   // handle submit
 })
 
