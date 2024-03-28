@@ -1,7 +1,6 @@
 import { DB } from 'hyperdeebee';
 import Autobase from 'autobase';
 import b4a from 'b4a';
-// import { BSON } from 'bson';
 import goodbye from 'graceful-goodbye';
 import { Autodeebee} from './autodeebee/index.js';
 import Hyperbee from 'hyperbee';

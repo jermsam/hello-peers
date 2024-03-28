@@ -1,8 +1,5 @@
 import DHT from '@hyperswarm/dht-relay'
 import Stream from '@hyperswarm/dht-relay/ws'
-// @ts-ignore
-// import goodbye from 'graceful-goodbye'
-// import * as BufferSource from 'buffer/'
 import b4a from 'b4a'
 
 import * as SDK from 'hyper-sdk'
