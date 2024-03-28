@@ -23,7 +23,6 @@
     "hyper-sdk": "^4.5.1",
     "hyperbee": "^2.18.2",
     "hyperdeebee": "github:Telios-org/hyperdeebee",
-    "hyperswarm": "^4.7.14",
-    "random-access-idb": "^1.2.2"
+    "hyperswarm": "^4.7.14"
   }
 }

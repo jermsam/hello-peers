@@ -9,7 +9,7 @@ import * as SDK from 'hyper-sdk'
 import { RangeWatcher } from '@lejeunerenard/hyperbee-range-watcher-autobase'
 import { BSON } from 'bson'
 import { createMultiWriterDB } from './db.js'
-import { setTodo, createTodo, configTodo } from './view.js'
+import { setTodo, createTodo, configTodo } from './view.js';
 const {WebSocket } = window
 
 let resolveReady
@@ -18,6 +18,7 @@ ready.then(_ => console.log('all set up'))
 
 const socket = new WebSocket('ws://localhost:3400')
 const dht = new DHT(new Stream(true, socket))
+const appName = 'todo';
 
 const sdk = await SDK.create({
   storage: false,
@@ -29,14 +30,12 @@ const sdk = await SDK.create({
 
 const db = await createMultiWriterDB(sdk)
 
-const todoCollection = db.collection('todo')
+const todoCollection = db.collection(appName)
 // await todoCollection.createIndex(['text'])
 // await todoCollection.createIndex(['done', 'text'])
 resolveReady()
 
 createWatcher()
-
-
 
 export function addTodo (todo) {
   ready.then(() => todoCollection.insert(todo))
