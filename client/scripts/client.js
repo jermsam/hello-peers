@@ -48,7 +48,7 @@ export function deleteTodo (_id) {
 }
 
 function createWatcher () {
-  return new RangeWatcher(db.autobase.view, {}, null, updateStream)
+  return new RangeWatcher(db.autobase.view, {}, undefined, updateStream)
 }
 async function updateStream (node) {
   const { key, value, type } = node

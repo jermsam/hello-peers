@@ -81,6 +81,7 @@ export async function createMultiWriterDB(sdk, { extPrefix, name } = defaultMult
   // there is no need to get the input and output cores as autobase does that for you now.
 
   const autobase = new Autobase(IOCore,null,{
+    // handle nodes
     apply: async (batch, view, base) => {
       // Add .addWriter functionality
       for (const node of batch) {
@@ -94,12 +95,18 @@ export async function createMultiWriterDB(sdk, { extPrefix, name } = defaultMult
       // Pass through to Autobee's apply
       await Autodeebee.apply(batch, view, base)
     },
+    // create your Hyperbee (view)
     open: (store)=> {
      const core = store.get(name)
       return  new Hyperbee(core, {
         extension: false,
       })
-     }
+     },
+    close: (/*view*/) => {
+      // ...
+    }, // close the view
+    valueEncoding: 'JSON', // encoding
+    ackInterval: 1000 // enable auto acking with the interval
   });
   await autobase.ready();
   const db = await  getDb(sdk,  {autobase,extPrefix});
