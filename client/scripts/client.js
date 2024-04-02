@@ -25,7 +25,7 @@ const sdk = await SDK.create({
   }
 })
 
-const db = await createMultiWriterDB(sdk)
+const db = await createMultiWriterDB(sdk,{name: appName})
 
 const todoCollection = db.collection(appName)
 // await todoCollection.createIndex(['text'])
